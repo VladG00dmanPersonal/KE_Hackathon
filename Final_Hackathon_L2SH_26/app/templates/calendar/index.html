@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Календарь{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="calendar-head">
+        <p class="eyebrow">Календарь</p>
+        <h1>{{ month_name }} {{ year }}</h1>
+        <div class="calendar-top-controls">
+            <div class="calendar-nav button-group">
+                <a class="button secondary" href="{{ url_for('calendar.index', year=prev_year, month=prev_month) }}">{{ prev_month_name }}</a>
+                <a class="button secondary" href="{{ url_for('calendar.index') }}">Сегодня</a>
+                <a class="button secondary" href="{{ url_for('calendar.index', year=next_year, month=next_month) }}">{{ next_month_name }}</a>
+            </div>
+            <form class="calendar-jump" method="get" action="{{ url_for('calendar.index') }}">
+                <select name="month" aria-label="Месяц">
+                    {% for month_number, month_label in month_options %}
+                        <option value="{{ month_number }}" {% if month_number == month %}selected{% endif %}>{{ month_label }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="year" value="{{ year }}" min="2000" max="2100" step="1" aria-label="Год">
+                <button type="submit">Перейти</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="calendar-grid">
+        {% for day_name in ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"] %}
+            <div class="calendar-weekday">{{ day_name }}</div>
+        {% endfor %}
+        {% for week in weeks %}
+            {% for day in week %}
+                {% set iso = day.isoformat() %}
+                <a class="calendar-day {% if day.month != month %}muted-day{% endif %} {% if day == today %}today{% endif %}" href="{{ url_for('calendar.day', event_date=iso) }}">
+                    <span class="day-number">{{ day.day }}</span>
+                    {% for event in events_by_date.get(iso, []) %}
+                        <span class="event">
+                            <strong>{{ event.title }}</strong>
+                            {% if event.description %}<span>{{ event.description }}</span>{% endif %}
+                        </span>
+                    {% endfor %}
+                </a>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ selected_day.day }} {{ month_name }}{% endblock %}
+{% block content %}
+<section class="section day-page day-page-shell">
+    <div class="day-page-head">
+        <p class="eyebrow">День календаря</p>
+        <h1>{{ selected_day.day }} {{ month_name }} {{ selected_day.year }}</h1>
+    </div>
+
+    <div class="day-page-body">
+        <div class="stack day-events">
+            {% for event in events %}
+                <article class="list-row day-event-row">
+                    <div>
+                        <strong>{{ event.title }}</strong>
+                        {% if event.description %}<p class="muted">{{ event.description }}</p>{% endif %}
+                        <p class="muted">{{ event.created_at }}</p>
+                    </div>
+                    <form
+                        method="post"
+                        action="{{ url_for('calendar.delete', event_id=event.id) }}"
+                        data-confirm-title="Удалить мероприятие?"
+                        data-confirm-message="Мероприятие &quot;{{ event.title }}&quot; будет удалено из календаря без возможности восстановления."
+                        data-confirm-confirm-label="Удалить"
+                        data-confirm-variant="danger"
+                    >
+                        <button class="ghost danger" type="submit">Удалить</button>
+                    </form>
+                </article>
+            {% else %}
+                <p class="empty day-empty">На этот день мероприятий пока нет.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="button-group centered-actions day-page-actions">
+        <a class="button secondary" href="{{ url_for('calendar.index', year=selected_day.year, month=selected_day.month) }}">К месяцу</a>
+    </div>
+</section>
+
+<button class="fab-button day-fab" type="button" data-open-dialog="event-dialog" aria-label="Добавить мероприятие" title="Добавить мероприятие">
+    <svg class="fab-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2"/>
+    </svg>
+</button>
+
+<dialog class="app-modal" id="event-dialog">
+    <div class="modal-head">
+        <strong>Добавить мероприятие</strong>
+        <button class="ghost" type="button" data-close-dialog>Закрыть</button>
+    </div>
+    <form
+        method="post"
+        action="{{ url_for('calendar.add') }}"
+        class="form-card modal-form"
+        data-confirm-title="Добавить мероприятие?"
+        data-confirm-message="Новое мероприятие будет сразу добавлено в календарь на выбранную дату."
+        data-confirm-confirm-label="Добавить"
+    >
+        <input type="hidden" name="event_date" value="{{ selected_day.isoformat() }}">
+        <input type="hidden" name="next" value="{{ url_for('calendar.day', event_date=selected_day.isoformat()) }}">
+        <label>Название
+            <input type="text" name="title" placeholder="Название события" required>
+        </label>
+        <label>Описание
+            <textarea name="description" rows="4" placeholder="Описание"></textarea>
+        </label>
+        <button type="submit">Добавить</button>
+    </form>
+</dialog>
+{% endblock %}

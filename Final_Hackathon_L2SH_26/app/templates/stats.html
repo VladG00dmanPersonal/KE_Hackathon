@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Статистика</p>
+            <h1>Динамичные графики</h1>
+        </div>
+        <a class="button" href="{{ url_for('stats.export_csv') }}">Выгрузить CSV</a>
+    </div>
+    <div class="chart-grid">
+        <div class="chart-card">
+            <h2>Статусы строк</h2>
+            <img class="chart-image" data-chart="statuses" src="{{ url_for('stats.chart', kind='statuses') }}" alt="График статусов строк">
+        </div>
+        <div class="chart-card">
+            <h2>Оплаченные заказы</h2>
+            <img class="chart-image" data-chart="orders" src="{{ url_for('stats.chart', kind='orders') }}" alt="График оплаченных заказов">
+        </div>
+        <div class="chart-card wide-chart">
+            <h2>Пример метрик</h2>
+            <img class="chart-image" data-chart="points" src="{{ url_for('stats.chart', kind='points') }}" alt="Линейный график метрик">
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/stats.js') }}"></script>
+{% endblock %}

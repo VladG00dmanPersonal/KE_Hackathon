@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Hackathon Template{% endblock %}</title>
+    <script>
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.dataset.theme = savedTheme;
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="{{ url_for('main.index') }}">Hackathon Template</a>
+        <div class="header-actions">
+            <nav class="nav">
+                <a href="{{ url_for('products.index') }}">Каталог</a>
+                <a href="{{ url_for('calendar.index') }}">Календарь</a>
+                <a href="{{ url_for('table.index') }}">Таблица</a>
+                <a href="{{ url_for('stats.index') }}">Статистика</a>
+                <a href="{{ url_for('forms.example') }}">Форма</a>
+                <a href="{{ url_for('advertisements.index') }}">Реклама</a>
+                {% if g.user %}
+                    <a href="{{ url_for('chat.index') }}">Чат</a>
+                {% endif %}
+            </nav>
+            <div class="header-tools">
+                <button class="theme-toggle icon-button ghost" type="button" data-theme-toggle aria-pressed="false" aria-label="Переключить тему">
+                    <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.2 15.1a8.5 8.5 0 1 1-11.3-11.3 7.6 7.6 0 1 0 11.3 11.3Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                    </svg>
+                    <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.9 1.9M7.4 16.6l-1.9 1.9M18.5 18.5l-1.9-1.9M7.4 7.4 5.5 5.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/>
+                    </svg>
+                    <span class="sr-only">Переключить тему</span>
+                </button>
+                {% if g.user %}
+                    <details class="profile-menu">
+                        <summary class="profile-trigger">
+                            <span class="profile-avatar">{{ (g.user.nickname or g.user.email)[0]|upper }}</span>
+                            <span class="profile-summary">
+                                <strong>{{ g.user.nickname }}</strong>
+                                <span>{{ g.user.role }} · {{ "%.2f"|format(g.user.balance) }}</span>
+                            </span>
+                            <svg class="profile-chevron" viewBox="0 0 20 20" aria-hidden="true">
+                                <path d="m5 7 5 6 5-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                            </svg>
+                        </summary>
+                        <div class="profile-dropdown">
+                            <a href="{{ url_for('profile.index') }}">Профиль</a>
+                            {% if g.user.role == 'admin' %}
+                                <a href="{{ url_for('admin.dashboard') }}">Админ</a>
+                            {% endif %}
+                            <a href="{{ url_for('products.mine') }}">Мои товары</a>
+                            <a href="{{ url_for('chat.index') }}">Чат</a>
+                            <a href="{{ url_for('cart.index') }}">Корзина</a>
+                            <a href="{{ url_for('auth.logout') }}">Выйти</a>
+                        </div>
+                    </details>
+                {% else %}
+                    <div class="button-group auth-links">
+                        <a class="button secondary" href="{{ url_for('auth.login') }}">Войти</a>
+                        <a class="button" href="{{ url_for('auth.register') }}">Регистрация</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {% include "components/flash.html" %}
+
+    <main class="page">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer" id="contacts">
+        <div class="footer-inner">
+            <section class="footer-block footer-brand">
+                <strong>Hackathon Template</strong>
+                <span>Flask, SQLite, HTML, CSS</span>
+                {% if g.user %}
+                    <span>{{ g.user.nickname }} · {{ g.user.role }} · Баланс: {{ "%.2f"|format(g.user.balance) }}</span>
+                {% else %}
+                    <span>Готовый каркас для доработки под проект</span>
+                {% endif %}
+            </section>
+            <section class="footer-block">
+                <h2>Спонсоры</h2>
+                <span>Партнёр 1</span>
+                <span>Партнёр 2</span>
+                <span>Партнёр 3</span>
+            </section>
+            <section class="footer-block">
+                <h2>Контакты</h2>
+                <a href="mailto:team@example.com">team@example.com</a>
+                <a href="tel:+70000000000">+7 000 000-00-00</a>
+                <span>Город, площадка хакатона</span>
+            </section>
+            <section class="footer-block">
+                <h2>Навигация</h2>
+                <a href="{{ url_for('products.index') }}">Каталог</a>
+                <a href="{{ url_for('calendar.index') }}">Календарь</a>
+                <a href="{{ url_for('stats.index') }}">Статистика</a>
+                <a href="{{ url_for('forms.example') }}">Форма</a>
+                {% if g.user %}
+                    <a href="{{ url_for('chat.index') }}">Чат</a>
+                {% endif %}
+            </section>
+        </div>
+    </footer>
+
+    <dialog class="image-modal" data-image-modal>
+        <div class="modal-head">
+            <strong data-image-title>Предпросмотр</strong>
+            <button class="ghost" type="button" data-image-close>Закрыть</button>
+        </div>
+        <img data-image-target alt="Предпросмотр изображения">
+    </dialog>
+
+    <dialog class="app-modal confirm-dialog" data-confirm-dialog aria-labelledby="confirm-title" aria-describedby="confirm-copy">
+        <div class="confirm-shell">
+            <div class="confirm-hero">
+                <div class="confirm-mark" data-confirm-mark aria-hidden="true">?</div>
+                <div class="confirm-intro">
+                    <span class="confirm-kicker" data-confirm-kicker>Подтвердите действие</span>
+                    <strong id="confirm-title" class="confirm-title" data-confirm-heading>Подтверждение</strong>
+                </div>
+                <button class="ghost confirm-close" type="button" data-confirm-cancel>Отмена</button>
+            </div>
+            <div class="confirm-body">
+                <p class="confirm-copy" id="confirm-copy" data-confirm-copy></p>
+                <p class="confirm-note" data-confirm-note>Проверьте данные перед продолжением.</p>
+                <div class="confirm-actions">
+                    <button class="button secondary" type="button" data-confirm-cancel>Отмена</button>
+                    <button class="button" type="button" data-confirm-accept>Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/image-preview.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+instance/
+.venv/
+venv/
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+!app/static/uploads/topups/
+!app/static/uploads/topups/.gitkeep
+!app/static/uploads/forms/
+!app/static/uploads/forms/.gitkeep
+!app/static/uploads/products/
+!app/static/uploads/products/.gitkeep

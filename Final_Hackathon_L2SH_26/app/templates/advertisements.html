@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}404 · Страница не найдена{% endblock %}
+{% block content %}
+<section class="section narrow error-shell">
+    <p class="eyebrow">Ошибка 67676767</p>
+    <p class="error-code">404</p>
+    <h1>Страница не найдена</h1>
+    <p class="empty error-copy">Похоже, адрес изменился, ссылка устарела или такой страницы здесь никогда не было.</p>
+    <div class="button-group centered-actions error-actions">
+        <a class="button" href="{{ url_for('main.index') }}">На главную</a>
+        <a class="button secondary" href="{{ url_for('products.index') }}">Открыть каталог</a>
+    </div>
+</section>
+{% endblock %}

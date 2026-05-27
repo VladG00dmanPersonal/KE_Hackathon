@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Пример формы{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Форма</p>
+            <h1>Пример заполнения разных полей</h1>
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="form-card wide-form">
+        <label>Текстовое поле
+            <input type="text" name="title" required placeholder="Название заявки">
+        </label>
+        <div class="form-grid">
+            <label>Число
+                <input type="number" name="number_value" step="0.01" value="10">
+            </label>
+            <label>Ползунок
+                <input type="range" name="slider_value" min="0" max="100" value="50">
+            </label>
+        </div>
+
+        <fieldset class="choice-fieldset">
+            <legend>Вариант из списка</legend>
+            <label class="check-line"><input type="radio" name="option_value" value="basic" checked> Базовый</label>
+            <label class="check-line"><input type="radio" name="option_value" value="advanced"> Расширенный</label>
+            <label class="check-line"><input type="radio" name="option_value" value="custom"> Пользовательский</label>
+        </fieldset>
+
+        <fieldset class="choice-fieldset">
+            <legend>Чекбоксы</legend>
+            <label class="check-line"><input type="checkbox" name="checkbox_values" value="email"> Уведомления по почте</label>
+            <label class="check-line"><input type="checkbox" name="checkbox_values" value="analytics"> Добавить в аналитику</label>
+            <label class="check-line"><input type="checkbox" name="checkbox_values" value="priority"> Высокий приоритет</label>
+        </fieldset>
+
+        <label class="file-label">Картинка
+            <input type="file" name="image" accept="image/*">
+        </label>
+        <label class="file-label">Файл
+            <input type="file" name="file">
+        </label>
+        <label>Комментарий
+            <textarea name="notes" rows="5" placeholder="Свободный текст"></textarea>
+        </label>
+        <button type="submit">Отправить пример</button>
+    </form>
+</section>
+
+<section class="section">
+    <h2>Последние отправки</h2>
+    <div class="stack">
+        {% for item in submissions %}
+            <article class="list-row">
+                <div>
+                    <strong>{{ item.title }}</strong>
+                    <p class="muted">{{ item.created_at }} · число {{ item.number_value }} · ползунок {{ item.slider_value }}</p>
+                    <p>{{ item.notes }}</p>
+                </div>
+                <div class="row-actions">
+                    {% if item.image_path %}
+                        <button class="button secondary" type="button" data-preview-src="{{ url_for('static', filename=item.image_path) }}" data-preview-title="{{ item.title }}">Картинка</button>
+                    {% endif %}
+                    {% if item.file_path %}
+                        <a class="button secondary" href="{{ url_for('static', filename=item.file_path) }}" target="_blank">Файл</a>
+                    {% endif %}
+                </div>
+            </article>
+        {% else %}
+            <p class="empty">Форма ещё не отправлялась.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

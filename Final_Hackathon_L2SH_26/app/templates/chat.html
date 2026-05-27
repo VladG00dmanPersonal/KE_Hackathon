@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Чат{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Сообщения</p>
+            <h1>Чат с пользователями</h1>
+            <p class="muted">Отдельная страница для личной переписки внутри приложения.</p>
+        </div>
+        {% if selected_user %}
+            <span class="pill">Собеседник: {{ selected_user.nickname }}</span>
+        {% endif %}
+    </div>
+
+    {% if chat_users %}
+        <div class="chat-layout">
+            <aside class="chat-sidebar">
+                <div class="chat-sidebar-head">
+                    <h2>Пользователи</h2>
+                    <p class="muted">Выберите человека, чтобы открыть диалог.</p>
+                </div>
+                <div class="stack">
+                    {% for user in chat_users %}
+                        <a
+                            class="chat-user-card {% if selected_user and selected_user.id == user.id %}active{% endif %}"
+                            href="{{ url_for('chat.index', user_id=user.id) }}"
+                        >
+                            <div class="chat-user-main">
+                                <span class="chat-user-avatar">{{ (user.nickname or user.email)[0]|upper }}</span>
+                                <div>
+                                    <strong>{{ user.nickname }}</strong>
+                                    <p class="muted">{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <p class="chat-user-preview">
+                                {{ user.last_message if user.last_message else "Сообщений пока не было." }}
+                            </p>
+                            <div class="chat-user-meta">
+                                <span class="muted">{{ user.last_message_at or "Новый диалог" }}</span>
+                                {% if user.unread_count %}
+                                    <span class="pill">{{ user.unread_count }} нов.</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </aside>
+
+            <div class="chat-panel">
+                <div class="chat-thread">
+                    <div class="chat-thread-head">
+                        <div>
+                            <p class="eyebrow">Диалог</p>
+                            <h2>{{ selected_user.nickname }}</h2>
+                            <p class="muted">{{ selected_user.email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages">
+                        {% for message in conversation %}
+                            <article class="chat-bubble {% if message.sender_id == g.user.id %}chat-bubble-outgoing{% else %}chat-bubble-incoming{% endif %}">
+                                <div class="chat-bubble-meta">
+                                    <strong>{{ "Вы" if message.sender_id == g.user.id else (message.sender_nickname or message.sender_email) }}</strong>
+                                    <span>{{ message.created_at }}</span>
+                                </div>
+                                <p>{{ message.body }}</p>
+                            </article>
+                        {% else %}
+                            <p class="empty chat-empty-dialog">Сообщений пока нет. Начните диалог первым.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <form method="post" action="{{ url_for('chat.send') }}" class="form-card chat-compose">
+                    <input type="hidden" name="recipient_id" value="{{ selected_user.id }}">
+                    <label>Сообщение
+                        <textarea
+                            name="body"
+                            maxlength="{{ max_message_length }}"
+                            placeholder="Напишите сообщение для {{ selected_user.nickname }}"
+                            required
+                        ></textarea>
+                    </label>
+                    <div class="chat-compose-actions">
+                        <p class="form-hint">До {{ max_message_length }} символов. После отправки диалог сразу обновится.</p>
+                        <button type="submit">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="form-card chat-empty-state">
+            <h2>Пока некому писать</h2>
+            <p class="muted">Когда в системе появятся другие пользователи, здесь можно будет начать диалог.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

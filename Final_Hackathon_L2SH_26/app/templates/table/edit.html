@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Изменить строку{% endblock %}
+{% block content %}
+<section class="section narrow">
+    <h1>Изменить строку #{{ row.id }}</h1>
+    <form
+        method="post"
+        class="form-card"
+        data-confirm-title="Сохранить изменения?"
+        data-confirm-message="Сохранить изменения для строки #{{ row.id }} &quot;{{ row.name }}&quot;?"
+        data-confirm-confirm-label="Сохранить"
+    >
+        <label>Название
+            <input type="text" name="name" required value="{{ row.name }}">
+        </label>
+        <label>Значение
+            <input type="number" name="amount" step="0.01" required value="{{ row.amount }}">
+        </label>
+        <label>Статус
+            <select name="status">
+                <option value="new" {% if row.status == 'new' %}selected{% endif %}>new</option>
+                <option value="in_progress" {% if row.status == 'in_progress' %}selected{% endif %}>in_progress</option>
+                <option value="done" {% if row.status == 'done' %}selected{% endif %}>done</option>
+            </select>
+        </label>
+        <label>Заметка
+            <textarea name="note" rows="4">{{ row.note }}</textarea>
+        </label>
+        <button type="submit">Сохранить</button>
+    </form>
+</section>
+{% endblock %}

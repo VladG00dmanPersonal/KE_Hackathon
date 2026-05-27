@@ -1,0 +1,57 @@
+<article class="card product-card">
+    <a class="product-media" href="{{ url_for('products.detail', product_id=product.id) }}">
+        {% if product.image_path %}
+            <img src="{{ url_for('static', filename=product.image_path) }}" alt="{{ product.name }}">
+        {% else %}
+            <span>{{ product.category }}</span>
+        {% endif %}
+    </a>
+    <div class="card-body">
+        <div class="product-meta">
+            <a class="category-link" href="{{ url_for('products.index', category_id=product.category_id) }}">{{ product.category }}</a>
+            <span class="pill">Оценка: {{ "%.1f"|format(product.avg_rating or 0) }}</span>
+        </div>
+        <h3><a href="{{ url_for('products.detail', product_id=product.id) }}">{{ product.name }}</a></h3>
+        <p>{{ product.description }}</p>
+        {% if product.tag_pairs %}
+            <div class="tag-list compact">
+                {% for tag_pair in product.tag_pairs.split('||') %}
+                    {% set tag_parts = tag_pair.split('~') %}
+                    <a class="tag" href="{{ url_for('products.index', tag_id=tag_parts[0]) }}">{{ tag_parts[1] }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="card-row">
+            <strong>{{ "%.2f"|format(product.price) }}</strong>
+            <span class="muted">Остаток: {{ product.stock }}</span>
+        </div>
+        {% if product.owner_nickname or product.owner_email %}
+            <div class="muted small-text">Автор: {{ product.owner_nickname or product.owner_email }}</div>
+        {% endif %}
+        <form method="post" action="{{ url_for('cart.add', product_id=product.id) }}" class="inline-form">
+            <input type="number" name="quantity" min="1" value="1" aria-label="Количество">
+            <button type="submit">В корзину</button>
+        </form>
+    </div>
+    <div class="product-row-compact">
+        <h3><a href="{{ url_for('products.detail', product_id=product.id) }}">{{ product.name }}</a></h3>
+        <div class="tag-list compact">
+            <span class="pill">Оценка: {{ "%.1f"|format(product.avg_rating or 0) }}</span>
+            {% if product.tag_pairs %}
+                {% set compact_tags = product.tag_pairs.split('||') %}
+                {% for tag_pair in compact_tags[:3] %}
+                    {% set tag_parts = tag_pair.split('~') %}
+                    <a class="tag" href="{{ url_for('products.index', tag_id=tag_parts[0]) }}">{{ tag_parts[1] }}</a>
+                {% endfor %}
+                {% if compact_tags|length > 3 %}
+                    <span class="tag">+{{ compact_tags|length - 3 }}</span>
+                {% endif %}
+            {% endif %}
+        </div>
+        <strong class="product-row-price">{{ "%.2f"|format(product.price) }}</strong>
+        <form method="post" action="{{ url_for('cart.add', product_id=product.id) }}" class="inline-form product-row-form">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit">В корзину</button>
+        </form>
+    </div>
+</article>

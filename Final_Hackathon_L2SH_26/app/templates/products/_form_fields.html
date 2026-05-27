@@ -1,0 +1,53 @@
+{% set form_tags = product_form_tags if product_form_tags is defined else tags %}
+<label>Название
+    <input type="text" name="name" required value="{{ product.name if product else '' }}">
+</label>
+<label>Описание
+    <textarea name="description" rows="5">{{ product.description if product else '' }}</textarea>
+</label>
+<div class="form-grid">
+    <label>Категория
+        <select name="category_id">
+            <option value="">Выберите категорию</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if product and product.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Новая категория
+        <input type="text" name="new_category" placeholder="Если нужной нет">
+    </label>
+</div>
+<div class="form-grid">
+    <label>Цена
+        <input type="number" name="price" step="0.01" min="0" value="{{ product.price if product else 0 }}">
+    </label>
+    <label>Остаток
+        <input type="number" name="stock" min="0" value="{{ product.stock if product else 0 }}">
+    </label>
+</div>
+<fieldset class="choice-fieldset">
+    <legend>Теги</legend>
+    <div class="tag-checkbox-grid">
+        {% for tag in form_tags %}
+            <label class="check-line">
+                <input type="checkbox" name="tag_ids" value="{{ tag.id }}" {% if tag.id in selected_tag_ids %}checked{% endif %}>
+                {{ tag.name }}
+            </label>
+        {% else %}
+            <span class="muted">Тегов пока нет.</span>
+        {% endfor %}
+    </div>
+</fieldset>
+<label>Новые теги
+    <input type="text" name="new_tags" placeholder="Например: акция, локальное, handmade">
+</label>
+<label class="file-label">Изображение
+    <input type="file" name="image" accept="image/*">
+</label>
+{% if product and show_active_toggle %}
+    <label class="check-line">
+        <input type="checkbox" name="is_active" {% if product.is_active %}checked{% endif %}>
+        Активен в каталоге
+    </label>
+{% endif %}

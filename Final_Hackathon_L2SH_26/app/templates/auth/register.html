@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<section class="section narrow auth-shell">
+    <h1>Регистрация</h1>
+    <form method="post" class="form-card auth-form">
+        <label>Почта
+            <input type="email" name="email" required autocomplete="email">
+        </label>
+        <label>Никнейм
+            <input type="text" name="nickname" required minlength="3" maxlength="32" pattern="[A-Za-zА-Яа-яЁё0-9._-]{3,32}" placeholder="User_01">
+        </label>
+        <p class="form-hint">3-32 символа, без пробелов: буквы, цифры, точка, подчёркивание и дефис.</p>
+        <label>Пароль
+            <input type="password" name="password" required autocomplete="new-password" minlength="6">
+        </label>
+        <label>Повтор пароля
+            <input type="password" name="password_confirm" required autocomplete="new-password" minlength="6">
+        </label>
+        <button type="submit">Создать аккаунт</button>
+    </form>
+</section>
+{% endblock %}

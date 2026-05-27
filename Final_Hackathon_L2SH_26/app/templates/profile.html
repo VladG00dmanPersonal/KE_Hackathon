@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Профиль{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Профиль</p>
+            <h1>{{ g.user.nickname }}</h1>
+            <p class="muted">{{ g.user.email }}</p>
+        </div>
+        <div class="profile-head-actions">
+            <span class="pill">{{ g.user.role }}</span>
+            <a class="button secondary" href="{{ url_for('chat.index') }}">Открыть чат</a>
+        </div>
+    </div>
+
+    <div class="two-col profile-grid">
+        <div class="form-card profile-card">
+            <h2>Никнейм</h2>
+            <form method="post" action="{{ url_for('profile.change_nickname') }}">
+                <label>Новый никнейм
+                    <input type="text" name="nickname" required minlength="3" maxlength="32" pattern="[A-Za-zА-Яа-яЁё0-9._-]{3,32}" value="{{ g.user.nickname }}">
+                </label>
+                <p class="form-hint">Уникальный никнейм: буквы, цифры, точка, подчёркивание и дефис.</p>
+                <button type="submit">Сохранить никнейм</button>
+            </form>
+        </div>
+
+        <div class="form-card profile-card">
+            <h2>Баланс</h2>
+            <p class="balance">{{ "%.2f"|format(g.user.balance) }}</p>
+            <form method="post" action="{{ url_for('profile.create_topup') }}" enctype="multipart/form-data">
+                <label>Сумма пополнения
+                    <input type="number" name="amount" step="0.01" min="1" required>
+                </label>
+                <label class="file-label">Картинка подтверждения оплаты
+                    <input type="file" name="receipt" accept="image/*" required>
+                </label>
+                <button type="submit">Отправить заявку</button>
+            </form>
+        </div>
+
+        <div class="form-card profile-card security-card">
+            <h2>Безопасность</h2>
+            <form method="post" action="{{ url_for('profile.request_email_change') }}">
+                <label>Новая почта
+                    <input type="email" name="new_email" placeholder="new@example.com">
+                </label>
+                <button type="submit">Запросить смену почты</button>
+            </form>
+            {% if g.user.pending_email %}
+                <div class="notice">
+                    <p>Ожидает подтверждения: <strong>{{ g.user.pending_email }}</strong></p>
+                    <form method="post" action="{{ url_for('profile.confirm_email_change') }}" class="inline-form wide">
+                        <input type="password" name="current_password" placeholder="Текущий пароль" required>
+                        <button type="submit">Подтвердить</button>
+                    </form>
+                    <form method="post" action="{{ url_for('profile.cancel_email_change') }}">
+                        <button class="ghost" type="submit">Отменить смену почты</button>
+                    </form>
+                </div>
+            {% endif %}
+            <form method="post" action="{{ url_for('profile.change_password') }}">
+                <label>Старый пароль
+                    <input type="password" name="current_password" required>
+                </label>
+                <label>Новый пароль
+                    <input type="password" name="new_password" minlength="6" required>
+                </label>
+                <label>Повтор нового пароля
+                    <input type="password" name="new_password_confirm" minlength="6" required>
+                </label>
+                <button type="submit">Сменить пароль</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="two-col profile-history-grid">
+        <div>
+            <h2>Заявки на пополнение</h2>
+            <div class="stack">
+                {% for topup in topups %}
+                    <article class="list-row">
+                        <div>
+                            <strong>{{ "%.2f"|format(topup.amount) }}</strong>
+                            <p class="muted">{{ topup.created_at }} · {{ topup.status }}</p>
+                            {% if topup.admin_comment %}<p>{{ topup.admin_comment }}</p>{% endif %}
+                        </div>
+                        <button class="button secondary" type="button" data-preview-src="{{ url_for('static', filename=topup.receipt_path) }}" data-preview-title="Чек на пополнение">Чек</button>
+                    </article>
+                {% else %}
+                    <p class="empty">Заявок пока нет.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <h2>Заказы</h2>
+            <div class="stack">
+                {% for order in orders %}
+                    <article class="list-row">
+                        <div>
+                            <strong>Заказ #{{ order.id }}</strong>
+                            <p class="muted">{{ order.created_at }} · {{ order.status }}</p>
+                        </div>
+                        <strong>{{ "%.2f"|format(order.total) }}</strong>
+                    </article>
+                {% else %}
+                    <p class="empty">Заказов пока нет.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

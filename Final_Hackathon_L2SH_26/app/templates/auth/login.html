@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<section class="section narrow auth-shell">
+    <h1>Вход</h1>
+    <form method="post" class="form-card auth-form">
+        <label>Почта
+            <input type="email" name="email" required autocomplete="email" placeholder="admin@example.com">
+        </label>
+        <label>Пароль
+            <input type="password" name="password" required autocomplete="current-password" placeholder="admin123">
+        </label>
+        <button type="submit">Войти</button>
+    </form>
+    <p class="muted auth-note">Демо-аккаунты: admin@example.com / admin123, user@example.com / user123.</p>
+</section>
+{% endblock %}

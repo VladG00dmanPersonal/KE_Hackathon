@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Главная · Hackathon Template{% endblock %}
+{% block content %}
+<div class="bootstrap-home">
+    <section class="section">
+        <div class="p-5 rounded-3 bootstrap-panel text-center">
+            <div class="container-fluid py-4">
+                <p class="eyebrow">Шаблон проекта</p>
+                <h1 class="display-5 fw-bold">База для хакатона на Flask и SQLite</h1>
+                <p class="col-lg-8 mx-auto fs-5 muted">
+                    Каталог, корзина, роли, календарь, таблицы, статистика, пополнение баланса и пользовательские товары уже связаны в один расширяемый шаблон.
+                </p>
+                <div class="hero-actions">
+                    <a class="button hero-action" href="{{ url_for('products.index') }}">Открыть каталог</a>
+                    {% if g.user %}
+                        <a class="button secondary hero-action" href="{{ url_for('products.new') }}">Добавить товар</a>
+                    {% else %}
+                        <a class="button secondary hero-action" href="{{ url_for('auth.register') }}">Создать аккаунт</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="row row-cols-1 row-cols-md-4 g-3 text-center">
+            <div class="col">
+                <div class="card h-100 bootstrap-card">
+                    <div class="card-body">
+                        <span class="muted">Товаров</span>
+                        <strong class="metric-value">{{ counters.products }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 bootstrap-card">
+                    <div class="card-body">
+                        <span class="muted">Заказов</span>
+                        <strong class="metric-value">{{ counters.orders }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 bootstrap-card">
+                    <div class="card-body">
+                        <span class="muted">Событий</span>
+                        <strong class="metric-value">{{ counters.events }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 bootstrap-card">
+                    <div class="card-body">
+                        <span class="muted">Строк</span>
+                        <strong class="metric-value">{{ counters.rows }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <h2>Готовые модули</h2>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6 col-xl-3">
+                <a class="card h-100 bootstrap-card" href="{{ url_for('calendar.index') }}">
+                    <div class="card-body">
+                        <h3 class="h5">Календарь</h3>
+                        <p class="muted mb-0">События по дням для пользователя.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a class="card h-100 bootstrap-card" href="{{ url_for('products.index') }}">
+                    <div class="card-body">
+                        <h3 class="h5">Каталог</h3>
+                        <p class="muted mb-0">Категории, теги, поиск, рейтинги.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a class="card h-100 bootstrap-card" href="{{ url_for('cart.index') }}">
+                    <div class="card-body">
+                        <h3 class="h5">Корзина</h3>
+                        <p class="muted mb-0">Баланс, оплата и оформление заказа.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a class="card h-100 bootstrap-card" href="{{ url_for('stats.index') }}">
+                    <div class="card-body">
+                        <h3 class="h5">Статистика</h3>
+                        <p class="muted mb-0">Matplotlib-графики и CSV-экспорт.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-7">
+                <div class="section-head">
+                    <h2>Последние товары</h2>
+                </div>
+                <div class="product-grid two-product-grid">
+                    {% for product in latest_products %}
+                        {% include "components/product_card.html" %}
+                    {% else %}
+                        <p class="empty">Товаров пока нет.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="accordion bootstrap-accordion" id="homeAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                Что можно быстро заменить
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#homeAccordion">
+                            <div class="accordion-body">
+                                Товары, категории, теги, формы и таблицы можно переименовать под маркетплейс, сервис заявок, библиотеку, склад или учебный проект.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                Что уже есть для командной работы
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#homeAccordion">
+                            <div class="accordion-body">
+                                Роли, админка, пользовательские товары, комментарии, оценки, баланс, заявки на пополнение и отдельные страницы модулей.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group bootstrap-list mt-3">
+                    <li class="list-group-item">SQLite-схема и сидовые данные</li>
+                    <li class="list-group-item">Разделение на blueprints и шаблоны</li>
+                    <li class="list-group-item">Светлая и тёмная тема</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

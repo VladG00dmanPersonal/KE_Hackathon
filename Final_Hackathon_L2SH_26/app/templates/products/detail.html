@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<section class="section product-detail">
+    <div class="detail-media">
+        {% if product.image_path %}
+            <img src="{{ url_for('static', filename=product.image_path) }}" alt="{{ product.name }}">
+        {% else %}
+            <span>{{ product.category }}</span>
+        {% endif %}
+    </div>
+    <div class="detail-info">
+        <a class="eyebrow category-link" href="{{ url_for('products.index', category_id=product.category_id) }}">{{ product.category }}</a>
+        <h1>{{ product.name }}</h1>
+        <p>{{ product.description }}</p>
+        <div class="tag-list">
+            {% for tag in tags %}
+                <a class="tag" href="{{ url_for('products.index', tag_id=tag.id) }}">{{ tag.name }}</a>
+            {% else %}
+                <span class="muted">Теги не добавлены.</span>
+            {% endfor %}
+        </div>
+        <dl class="details">
+            <div><dt>Цена</dt><dd>{{ "%.2f"|format(product.price) }}</dd></div>
+            <div><dt>Остаток</dt><dd>{{ product.stock }}</dd></div>
+            <div><dt>Оценка</dt><dd>{{ "%.1f"|format(product.avg_rating or 0) }} / 5 · {{ product.review_count }} отзывов</dd></div>
+            <div><dt>Автор</dt><dd>{{ product.owner_nickname or product.owner_email or "system" }}</dd></div>
+            <div><dt>Добавлен</dt><dd>{{ product.created_at }}</dd></div>
+        </dl>
+        <div class="button-group product-detail-actions">
+            <form method="post" action="{{ url_for('cart.add', product_id=product.id) }}" class="inline-form wide equal-inline">
+                <input type="number" name="quantity" min="1" value="1">
+                <button type="submit">Добавить в корзину</button>
+            </form>
+            {% if can_edit %}
+                <button class="button secondary" type="button" data-open-dialog="product-edit-dialog">Редактировать</button>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-head">
+        <h2>Оценки и комментарии</h2>
+    </div>
+    {% if g.user %}
+        <form method="post" action="{{ url_for('products.review', product_id=product.id) }}" class="form-card review-form">
+            <div class="form-grid">
+                <label>Оценка
+                    <select name="rating" required>
+                        {% for value in [5, 4, 3, 2, 1] %}
+                            <option value="{{ value }}" {% if user_review and user_review.rating == value %}selected{% endif %}>{{ value }} из 5</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Комментарий
+                    <input type="text" name="comment" value="{{ user_review.comment if user_review else '' }}" placeholder="Короткий отзыв о товаре">
+                </label>
+            </div>
+            <button type="submit">Сохранить отзыв</button>
+        </form>
+    {% else %}
+        <p class="empty">Войдите, чтобы оставить оценку и комментарий.</p>
+    {% endif %}
+
+    <div class="stack review-list">
+        {% for review in reviews %}
+            <article class="list-row">
+                <div>
+                    <strong>{{ review.user_nickname or review.user_email }}</strong>
+                    <p class="muted">{{ review.updated_at }} · {{ review.rating }} из 5</p>
+                    <p>{{ review.comment or "Без комментария." }}</p>
+                </div>
+            </article>
+        {% else %}
+            <p class="empty">Отзывов пока нет.</p>
+        {% endfor %}
+    </div>
+</section>
+{% if can_edit %}
+<dialog class="app-modal product-modal" id="product-edit-dialog">
+    <div class="modal-head">
+        <strong>Редактировать товар</strong>
+        <button class="ghost" type="button" data-close-dialog>Закрыть</button>
+    </div>
+    {% set product_form_tags = all_tags %}
+    <form
+        method="post"
+        action="{{ url_for('products.edit', product_id=product.id) }}"
+        enctype="multipart/form-data"
+        class="form-card modal-form product-form-expanded"
+        data-confirm-title="Сохранить изменения?"
+        data-confirm-message="Сохранить изменения для товара &quot;{{ product.name }}&quot;?"
+        data-confirm-confirm-label="Сохранить"
+    >
+        {% include "products/_form_fields.html" %}
+        <button type="submit">Сохранить</button>
+    </form>
+</dialog>
+{% endif %}
+{% endblock %}

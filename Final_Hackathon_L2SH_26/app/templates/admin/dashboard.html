@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Админ{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Админ-панель</p>
+            <h1>Управление шаблоном</h1>
+        </div>
+        <a class="button" href="{{ url_for('admin.products') }}">Товары</a>
+    </div>
+    <div class="grid metrics">
+        <div class="metric"><span>Пользователи</span><strong>{{ counts.users }}</strong></div>
+        <div class="metric"><span>Товары</span><strong>{{ counts.products }}</strong></div>
+        <div class="metric"><span>Заказы</span><strong>{{ counts.orders }}</strong></div>
+        <div class="metric"><span>Заявки</span><strong>{{ counts.pending_topups }}</strong></div>
+    </div>
+</section>
+
+<section class="section">
+    <h2>Заявки на пополнение</h2>
+    <div class="stack">
+        {% for topup in topups %}
+            <article class="list-row topup-row">
+                <div>
+                    <strong>{{ topup.user_nickname or topup.user_email }}</strong>
+                    <p class="muted">{{ "%.2f"|format(topup.amount) }} · {{ topup.status }} · {{ topup.created_at }}</p>
+                    {% if topup.admin_comment %}<p>{{ topup.admin_comment }}</p>{% endif %}
+                </div>
+                <div class="row-actions topup-actions">
+                    <button class="button secondary" type="button" data-preview-src="{{ url_for('static', filename=topup.receipt_path) }}" data-preview-title="Чек {{ topup.user_nickname or topup.user_email }}">Открыть картинку</button>
+                    {% if topup.status == 'pending' %}
+                        <form method="post" action="{{ url_for('admin.approve_topup', topup_id=topup.id) }}">
+                            <button type="submit">Подтвердить</button>
+                        </form>
+                        <form method="post" action="{{ url_for('admin.decline_topup', topup_id=topup.id) }}" class="inline-form wide equal-inline">
+                            <input type="text" name="admin_comment" placeholder="Комментарий">
+                            <button class="ghost danger" type="submit">Отклонить</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </article>
+        {% else %}
+            <p class="empty">Заявок пока нет.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section">
+    <h2>Пользователи и роли</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Никнейм</th>
+                    <th>Почта</th>
+                    <th>Роль</th>
+                    <th>Баланс</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.nickname }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ "%.2f"|format(user.balance) }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('admin.update_user_role', user_id=user.id) }}" class="inline-form equal-inline">
+                                <select name="role">
+                                    <option value="user" {% if user.role == 'user' %}selected{% endif %}>user</option>
+                                    <option value="manager" {% if user.role == 'manager' %}selected{% endif %}>manager</option>
+                                    <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>admin</option>
+                                </select>
+                                <button type="submit">Сохранить</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

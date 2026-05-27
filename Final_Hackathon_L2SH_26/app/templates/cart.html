@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Корзина{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <h1>Корзина</h1>
+        <span class="pill">Баланс: {{ "%.2f"|format(g.user.balance) }}</span>
+    </div>
+
+    <div class="stack">
+        {% for item in items %}
+            <article class="list-row">
+                <div>
+                    <strong>{{ item.name }}</strong>
+                    <p class="muted">{{ "%.2f"|format(item.price) }} · остаток {{ item.stock }}</p>
+                    {% if not item.is_active %}
+                        <p class="danger-text">Товар скрыт и недоступен для заказа.</p>
+                    {% endif %}
+                </div>
+                <form method="post" action="{{ url_for('cart.update', item_id=item.id) }}" class="inline-form equal-inline">
+                    <input type="number" name="quantity" min="0" value="{{ item.quantity }}">
+                    <button type="submit">Обновить</button>
+                </form>
+                <div class="row-actions">
+                    <strong>{{ "%.2f"|format(item.subtotal) }}</strong>
+                    <form method="post" action="{{ url_for('cart.remove', item_id=item.id) }}">
+                        <button class="ghost danger" type="submit">Удалить</button>
+                    </form>
+                </div>
+            </article>
+        {% else %}
+            <p class="empty">Корзина пуста.</p>
+        {% endfor %}
+    </div>
+
+    {% if items %}
+        <div class="checkout">
+            <div>
+                <span class="muted">Итого</span>
+                <strong>{{ "%.2f"|format(total) }}</strong>
+            </div>
+            <form method="post" action="{{ url_for('cart.checkout') }}">
+                <button type="submit">Оформить заказ</button>
+            </form>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

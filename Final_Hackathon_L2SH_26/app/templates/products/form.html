@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ form_title }}{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <h1>{{ form_title }}</h1>
+        <a class="button secondary" href="{{ back_url }}">Назад</a>
+    </div>
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="form-card wide-form product-form-expanded"
+        {% if product %}
+            data-confirm-title="Сохранить изменения?"
+            data-confirm-message="Сохранить изменения для товара &quot;{{ product.name }}&quot;?"
+            data-confirm-confirm-label="Сохранить"
+        {% endif %}
+    >
+        {% include "products/_form_fields.html" %}
+        <button type="submit">Сохранить</button>
+    </form>
+</section>
+{% endblock %}

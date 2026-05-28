@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Таблица{% endblock %}
+{% block title %}Школы{% endblock %}
 {% block content %}
 <section class="section">
     <div class="section-head">
         <div>
             <p class="eyebrow">Данные</p>
-            <h1>Статистика по школам Москвы и Питера</h1>
+            <h1>Статистика по школам</h1>
         </div>
         <a class="button secondary" href="{{ url_for('table_school.index') }}">Участников</a>
         <a class="button secondary" href="{{ url_for('table_school.index2') }}">Призёров</a>

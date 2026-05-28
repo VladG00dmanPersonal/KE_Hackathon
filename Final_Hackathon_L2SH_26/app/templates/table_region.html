@@ -7,10 +7,10 @@
             <p class="eyebrow">Данные</p>
             <h1>Статистика по регионам</h1>
         </div>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Участников</a>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Призёров</a>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Победителей</a>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Дипломов</a>
+        <a class="button secondary" href="{{ url_for('table_region.index') }}">Участников</a>
+        <a class="button secondary" href="{{ url_for('table_region.index2') }}">Призёров</a>
+        <a class="button secondary" href="{{ url_for('table_region.index3') }}">Победителей</a>
+        <a class="button secondary" href="{{ url_for('table_region.index4') }}">Дипломов</a>
     </div>
 
     <div class="table-wrap">
@@ -19,7 +19,7 @@
                 <tr>
                     <th>Место</th>
                     <th>Название</th>
-                    <th>Параметр</th>
+                    <th>{{ param }}</th>
                     <!-- <th>Участников</th>
                     <th>Призёров</th>
                     <th>Победителей</th>

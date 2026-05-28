@@ -19,7 +19,7 @@ def index():
         Winners = ("Победитель", "sum"),
         MinPlace = ("Место", "min"),
         MaxPlace = ("Место", "max"),
-    ).reset_index().sort_values("Participants", ascending=False).reset_index(drop=True)
+    ).reset_index().sort_values(["Participants", "Регион"], ascending=[False, True]).reset_index(drop=True)
     df = df[df['Participants'] > 0].reset_index(drop=True)
     df["Place"] = df.index + 1
 
@@ -42,7 +42,7 @@ def index2():
         Winners = ("Победитель", "sum"),
         MinPlace = ("Место", "min"),
         MaxPlace = ("Место", "max"),
-    ).reset_index().sort_values("Prized", ascending=False).reset_index(drop=True)
+    ).reset_index().sort_values(["Prized", "Регион"], ascending=False).reset_index(drop=True)
     df = df[df['Prized'] > 0].reset_index(drop=True)
     df["Place"] = df.index + 1
 
@@ -65,7 +65,7 @@ def index3():
         Winners = ("Победитель", "sum"),
         MinPlace = ("Место", "min"),
         MaxPlace = ("Место", "max"),
-    ).reset_index().sort_values("Winners", ascending=False)
+    ).reset_index().sort_values(["Winners", "Регион"], ascending=[False, True])
     df = df[df['Winners'] > 0].reset_index(drop=True)
     df["Place"] = df.index + 1
 
@@ -90,7 +90,7 @@ def index4():
         MaxPlace = ("Место", "max"),
     ).reset_index().sort_values("Winners", ascending=False).reset_index(drop=True)
     df["Diplomed"] = df["Prized"] + df["Winners"]
-    df = df.sort_values("Diplomed", ascending=False).reset_index(drop=True)
+    df = df.sort_values(["Diplomed", "Регион"], ascending=[False, True]).reset_index(drop=True)
     df = df[df['Diplomed'] > 0].reset_index(drop=True)
     df["Place"] = df.index + 1
 

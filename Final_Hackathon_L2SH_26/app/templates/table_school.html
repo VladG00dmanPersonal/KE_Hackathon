@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Под задание 2{% endblock %}
+{% block title %}Таблица{% endblock %}
 {% block content %}
 <section class="section">
     <div class="section-head">
         <div>
             <p class="eyebrow">Данные</p>
-            <h1>Статистика по регионам</h1>
+            <h1>Статистика по школам Москвы и Питера</h1>
         </div>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Участников</a>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Призёров</a>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Победителей</a>
-        <a class="button secondary" href="{{ url_for('stats.export_csv') }}">Дипломов</a>
+        <a class="button secondary" href="{{ url_for('table_school.index') }}">Участников</a>
+        <a class="button secondary" href="{{ url_for('table_school.index2') }}">Призёров</a>
+        <a class="button secondary" href="{{ url_for('table_school.index3') }}">Победителей</a>
+        <a class="button secondary" href="{{ url_for('table_school.index4') }}">Дипломов</a>
     </div>
 
     <div class="table-wrap">
@@ -18,35 +18,16 @@
             <thead>
                 <tr>
                     <th>Место</th>
-                    <th>Название</th>
-                    <th>Регион</th>
-                    <th>Параметр</th>
+                    <th>Школа</th>
+                    <th>{{ param }}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for row in rows %}
                     <tr>
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.name }}</td>
-                        <td>{{ "%.2f"|format(row.amount) }}</td>
-                        <td><span class="pill">{{ row.status }}</span></td>
-                        <td>{{ row.note }}</td>
-                        <td>{{ row.creator_email or "system" }}</td>
-                        <td>
-                            <div class="actions-cell">
-                                <a class="button secondary" href="{{ url_for('table.edit', row_id=row.id) }}">Изменить</a>
-                                <form
-                                    method="post"
-                                    action="{{ url_for('table.delete', row_id=row.id) }}"
-                                    data-confirm-title="Удалить строку?"
-                                    data-confirm-message="Строка &quot;{{ row.name }}&quot; будет удалена без возможности восстановления."
-                                    data-confirm-confirm-label="Удалить"
-                                    data-confirm-variant="danger"
-                                >
-                                    <button class="ghost danger" type="submit">Удалить</button>
-                                </form>
-                            </div>
-                        </td>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
                     </tr>
                 {% else %}
                     <tr><td colspan="7">Строк пока нет.</td></tr>

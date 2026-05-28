@@ -24,22 +24,19 @@
 
         <fieldset class="choice-fieldset">
             <legend>Вариант из списка</legend>
-            <label class="check-line"><input type="radio" name="option_value" value="all" checked> Все участники</label>
-            <label class="check-line"><input type="radio" name="option_value" value="only_11"> 11 класс</label>
-            <label class="check-line"><input type="radio" name="option_value" value="only_10"> 10 класс</label>
-            <label class="check-line"><input type="radio" name="option_value" value="only_9" checked> 9 класс</label>
-            <label class="check-line"><input type="radio" name="option_value" value="10_and_lower"> 10 класс и младше</label>
-            <label class="check-line"><input type="radio" name="option_value" value="9_and_lower"> 9 класс и младше</label>
-            <label class="check-line"><input type="radio" name="option_value" value="8_and_lower"> 8 класс и младше</label>
+            <label class="check-line"><input type="radio" name="option_value" value="basic" checked> Базовый</label>
+            <label class="check-line"><input type="radio" name="option_value" value="advanced"> Расширенный</label>
+            <label class="check-line"><input type="radio" name="option_value" value="custom"> Пользовательский</label>
         </fieldset>
 
         <fieldset class="choice-fieldset">
             <legend>Чекбоксы</legend>
-            <label class="check-line"><input type="checkbox" name="checkbox_values" value="first_tour"> Первый тур</label>
-            <label class="check-line"><input type="checkbox" name="checkbox_values" value="second_tour"> Второй тур</label>
+            <label class="check-line"><input type="checkbox" name="checkbox_values" value="email"> Уведомления по почте</label>
+            <label class="check-line"><input type="checkbox" name="checkbox_values" value="analytics"> Добавить в аналитику</label>
+            <label class="check-line"><input type="checkbox" name="checkbox_values" value="priority"> Высокий приоритет</label>
         </fieldset>
 
-        {% comment %} <label class="file-label">Картинка
+        <label class="file-label">Картинка
             <input type="file" name="image" accept="image/*">
         </label>
         <label class="file-label">Файл
@@ -47,7 +44,7 @@
         </label>
         <label>Комментарий
             <textarea name="notes" rows="5" placeholder="Свободный текст"></textarea>
-        </label> {% endcomment %}
+        </label>
         <button type="submit">Отправить пример</button>
     </form>
 </section>

@@ -33,7 +33,7 @@ def example():
         # notes = request.form.get("notes", "").strip()
         # image_path = save_upload(request.files.get("image"), "results", ALLOWED_IMAGE_EXTENSIONS)
         # file_path = save_upload(request.files.get("file"), "results", ALLOWED_FILE_EXTENSIONS)
-        option_value = request.form.get("option_value", "basic")
+        option_value = request.form.get("option_value", "all")
         checkbox_values = request.form.getlist("checkbox_values")
         # if not title:
         #     flash("Введите текстовое название.", "danger")
@@ -83,6 +83,6 @@ def example():
     #     LIMIT 10
     #     """
     # ).fetchall()
-    print(checkbox_values, option_value)
+    # print(option_value)
     return render_template("results/example.html")
 

@@ -3,7 +3,7 @@ import os
 from flask import Flask, g, render_template, session
 
 from . import db
-from .routes import table_region, admin, auth, calendar, cart, chat, forms, main, products, profile, stats, table
+from .routes import table_region, admin, auth, calendar, cart, chat, forms, main, products, profile, stats, table, table_school
 
 
 def create_app(test_config=None):
@@ -49,6 +49,7 @@ def create_app(test_config=None):
     app.register_blueprint(forms.bp)
     app.register_blueprint(chat.bp)
     app.register_blueprint(table_region.bp)
+    app.register_blueprint(table_school.bp)
 
     @app.errorhandler(404)
     def page_not_found(_error):

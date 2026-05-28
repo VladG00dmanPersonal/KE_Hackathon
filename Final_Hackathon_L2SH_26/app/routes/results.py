@@ -25,16 +25,11 @@ def save_upload(file_storage, subdir, extensions):
 # @login_required
 def example():
     if request.method == "POST":
-        title = request.form.get("title", "").strip()
-        number_value = request.form.get("number_value", 0, type=float)
-        slider_value = request.form.get("slider_value", 50, type=int)
-        option_value = request.form.get("option_value", "basic")
-        checkbox_values = request.form.getlist("checkbox_values")
-        notes = request.form.get("notes", "").strip()
-        image_path = save_upload(request.files.get("image"), "forms", ALLOWED_IMAGE_EXTENSIONS)
-        file_path = save_upload(request.files.get("file"), "forms", ALLOWED_FILE_EXTENSIONS)
+        tour = request.form.get("option_value2", "basic")
+        grade = request.form.get("option_value", "basic")
+        region = request.form.get("tag_id")
 
-        print(title, number_value, slider_value, option_value)
+        print(tour, grade, region)
 
     countries = [{id: 1, "name": "Москва"}, {id: 2, "name": "Санкт-Петербург"}, {id: 3, "name": "Республика Татарстан"}, {id: 4, "name": "Московская область"}, {id: 4, "name": "Новосибирская область"}, {id: 5, "name": "Челябинская область"}, {id: 6, "name": "Свердловская область"}, {id: 7, "name": "Пермский край"}, {id: 8, "name": "Новосибирская область"}, {id: 9, "name": "Липецкая область"}, {id: 10, "name": "Оренбургская область"}, {id: 11, "name": "Республика Башкортостан"}]
 

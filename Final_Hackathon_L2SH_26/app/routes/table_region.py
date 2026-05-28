@@ -28,7 +28,11 @@ def index():
         Winners = ("Победитель", "sum"),
         MinPlace = ("Место", "min"),
         MaxPlace = ("Место", "max"),
-    ).reset_index().sort_values("Participants", ascending=False)
-    print(df.head(20))
+    ).reset_index().sort_values("Participants", ascending=False).reset_index(drop=True)
+    df["Place"] = df.index + 1
 
-    return render_template("table_region.html")
+    rows = df[["Place", "Регион", "Participants"]].values.tolist()
+
+    print(rows)
+
+    return render_template("table_region.html", rows=rows)

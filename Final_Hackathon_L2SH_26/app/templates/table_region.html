@@ -29,27 +29,9 @@
             <tbody>
                 {% for row in rows %}
                     <tr>
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.name }}</td>
-                        <td>{{ "%.2f"|format(row.amount) }}</td>
-                        <td><span class="pill">{{ row.status }}</span></td>
-                        <td>{{ row.note }}</td>
-                        <td>{{ row.creator_email or "system" }}</td>
-                        <td>
-                            <div class="actions-cell">
-                                <a class="button secondary" href="{{ url_for('table.edit', row_id=row.id) }}">Изменить</a>
-                                <form
-                                    method="post"
-                                    action="{{ url_for('table.delete', row_id=row.id) }}"
-                                    data-confirm-title="Удалить строку?"
-                                    data-confirm-message="Строка &quot;{{ row.name }}&quot; будет удалена без возможности восстановления."
-                                    data-confirm-confirm-label="Удалить"
-                                    data-confirm-variant="danger"
-                                >
-                                    <button class="ghost danger" type="submit">Удалить</button>
-                                </form>
-                            </div>
-                        </td>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
                     </tr>
                 {% else %}
                     <tr><td colspan="7">Строк пока нет.</td></tr>

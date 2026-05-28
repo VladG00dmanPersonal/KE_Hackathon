@@ -17,17 +17,18 @@ def index():
     #     """
     # ).fetchall()
 
-    data = json.load(open("app/static/task1_parse/parsed_results.json", "r", encoding="utf-8"))
-    tour1 = []
-    tour2 = []
-
-    for k, v in data['Первый тур'].items():
-        tour1.extend(v)
-    
-    for k, v in data['Второй тур'].items():
-        tour2.extend(v)
-
-    df = pd.concat([pd.DataFrame(tour1), pd.DataFrame(tour2)], ignore_index=True)
-    print(df.head())
+    data = json.load(open("app/static/task1_parse/parsed_results.json", "r", encoding="utf-8"))["Второй тур"]["300"]
+    df = pd.DataFrame(data)[["Место", "Регион", "Итог"]].sort_values("Итог", ascending=False).reset_index(drop=True)
+    df["Место"] = df.index + 1
+    df["Призёр"] = (df["Место"] <= 225) & (df["Место"] > 40)
+    df["Победитель"] = df["Место"] <= 40
+    df = df.groupby("Регион").agg(
+        Participants = ("Место", "count"),
+        Prized = ("Призёр", "sum"),
+        Winners = ("Победитель", "sum"),
+        MinPlace = ("Место", "min"),
+        MaxPlace = ("Место", "max"),
+    ).reset_index().sort_values("Participants", ascending=False)
+    print(df.head(20))
 
     return render_template("table_region.html")

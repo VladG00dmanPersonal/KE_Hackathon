@@ -25,64 +25,27 @@ def save_upload(file_storage, subdir, extensions):
 # @login_required
 def example():
     if request.method == "POST":
-        # title = request.form.get("title", "").strip()
-        # number_value = request.form.get("number_value", 0, type=float)
-        # slider_value = request.form.get("slider_value", 50, type=int)
-        # option_value = request.form.get("option_value", "basic")
-        # checkbox_values = request.form.getlist("checkbox_values")
-        # notes = request.form.get("notes", "").strip()
-        # image_path = save_upload(request.files.get("image"), "results", ALLOWED_IMAGE_EXTENSIONS)
-        # file_path = save_upload(request.files.get("file"), "results", ALLOWED_FILE_EXTENSIONS)
-        option_value = request.form.get("option_value", "all")
+        title = request.form.get("title", "").strip()
+        number_value = request.form.get("number_value", 0, type=float)
+        slider_value = request.form.get("slider_value", 50, type=int)
+        option_value = request.form.get("option_value", "basic")
         checkbox_values = request.form.getlist("checkbox_values")
-        # if not title:
-        #     flash("Введите текстовое название.", "danger")
-        # elif image_path is False:
-        #     flash("Изображение должно быть png, jpg, jpeg, gif или webp.", "danger")
-        # elif file_path is False:
-        #     flash("Файл имеет неподдерживаемый формат.", "danger")
-        # else:
-        #     db = get_db()
-        #     db.execute(
-        #         """
-        #         INSERT INTO form_submissions (
-        #             user_id,
-        #             title,
-        #             number_value,
-        #             slider_value,
-        #             option_value,
-        #             checkbox_values,
-        #             image_path,
-        #             file_path,
-        #             notes
-        #         )
-        #         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        #         """,
-        #         (
-        #             g.user["id"],
-        #             title,
-        #             number_value,
-        #             slider_value,
-        #             option_value,
-        #             json.dumps(checkbox_values, ensure_ascii=False),
-        #             image_path,
-        #             file_path,
-        #             notes,
-        #         ),
-        #     )
-        #     db.commit()
-        #     flash("Форма отправлена и сохранена в SQLite.", "success")
-        #     return redirect(url_for("results.example"))
+        notes = request.form.get("notes", "").strip()
+        image_path = save_upload(request.files.get("image"), "forms", ALLOWED_IMAGE_EXTENSIONS)
+        file_path = save_upload(request.files.get("file"), "forms", ALLOWED_FILE_EXTENSIONS)
 
-    # submissions = get_db().execute(
-    #     """
-    #     SELECT fs.*, u.email AS user_email
-    #     FROM form_submissions fs
-    #     LEFT JOIN users u ON u.id = fs.user_id
-    #     ORDER BY fs.created_at DESC
-    #     LIMIT 10
-    #     """
-    # ).fetchall()
-    # print(option_value)
-    return render_template("results/example.html")
+        print(title, number_value, slider_value, option_value)
+
+    countries = [{id: 1, "name": "Москва"}, {id: 2, "name": "Санкт-Петербург"}, {id: 3, "name": "Республика Татарстан"}, {id: 4, "name": "Московская область"}, {id: 4, "name": "Новосибирская область"}, {id: 5, "name": "Челябинская область"}, {id: 6, "name": "Свердловская область"}, {id: 7, "name": "Пермский край"}, {id: 8, "name": "Новосибирская область"}, {id: 9, "name": "Липецкая область"}, {id: 10, "name": "Оренбургская область"}, {id: 11, "name": "Республика Башкортостан"}]
+
+    submissions = get_db().execute(
+        """
+        SELECT fs.*, u.email AS user_email
+        FROM form_submissions fs
+        LEFT JOIN users u ON u.id = fs.user_id
+        ORDER BY fs.created_at DESC
+        LIMIT 10
+        """
+    ).fetchall()
+    return render_template("results/example.html", submissions=submissions, tags=countries, filters={})
 

@@ -39,13 +39,16 @@ def example():
         region = request.form.get("option_value3", "basic")
         print(tour)
 
-        if tour == 'both':
+        if tour == 'first':
             data = json.load(open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/parsed_results.json", "r", encoding="utf-8"))["Второй тур"]["300"]
             df = pd.DataFrame(data).sort_values("Итог", ascending=False).reset_index(drop=True)
+            df['Итог'] = df['Задача 1'] + df['Задача 2'] + df['Задача 3'] + df['Задача 4']
+            # df = df.sort_values("Итог", ascending=False).reset_index(drop=True)
             df['Школа'] = df['Участник'].apply(lambda x: get_school(x)[0])
             df["Место"] = df.index + 1
 
             grade_filter = df['Класс'].astype(int) > 0
+            region_filter = df['Регион'] == region
 
             if grade == "all":
                 pass
@@ -62,10 +65,40 @@ def example():
             elif grade == "8_and_lower":
                 grade_filter = df['Класс'].astype(int) <= 8
             
-            df = df[grade_filter]
+            df = df[grade_filter][region_filter]
 
-            print(tour, grade, region)
-            print(df)
+            cols = df.columns.to_list()
+            rows = df.values.tolist()
+
+        if tour == 'both':
+            data = json.load(open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/parsed_results.json", "r", encoding="utf-8"))["Второй тур"]["300"]
+            df = pd.DataFrame(data).sort_values("Итог", ascending=False).reset_index(drop=True)
+            # df = df.drop(["Задача 1", "Задача 2", "Задача 3", "Задача 4"], axis=1)
+            df['Школа'] = df['Участник'].apply(lambda x: get_school(x)[0])
+            df["Место"] = df.index + 1
+
+            grade_filter = df['Класс'].astype(int) > 0
+            region_filter = df['Регион'] == region
+
+            if grade == "all":
+                pass
+            elif grade == "only_11":
+                grade_filter = df['Класс'].astype(int) == 11
+            elif grade == "only_10":
+                grade_filter = df['Класс'].astype(int) == 10
+            elif grade == "only_9":
+                grade_filter = df['Класс'].astype(int) == 9
+            elif grade == "10_and_lower":
+                grade_filter = df['Класс'].astype(int) <= 10
+            elif grade == "9_and_lower":
+                grade_filter = df['Класс'].astype(int) <= 9
+            elif grade == "8_and_lower":
+                grade_filter = df['Класс'].astype(int) <= 8
+            
+            df = df[grade_filter][region_filter]
+
+            cols = df.columns.to_list()
+            rows = df.values.tolist()
 
     countries = [{id: 1, "name": "Москва"}, {id: 2, "name": "Санкт-Петербург"}, {id: 3, "name": "Республика Татарстан"}, {id: 4, "name": "Московская область"}, {id: 4, "name": "Новосибирская область"}, {id: 5, "name": "Челябинская область"}, {id: 6, "name": "Свердловская область"}, {id: 7, "name": "Пермский край"}, {id: 8, "name": "Новосибирская область"}, {id: 9, "name": "Липецкая область"}, {id: 10, "name": "Оренбургская область"}, {id: 11, "name": "Республика Башкортостан"}]
     file = open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/schools_moscow.txt", "r", encoding="utf-8")
@@ -76,5 +109,5 @@ def example():
     file.close()
     print(countries)
     print(schools_spb)
-    return render_template("results/example.html", tags=countries, filters={}, schools_moscow=schools_moscow, schools_spb=schools_spb)
+    return render_template("results/example.html", tags=countries, filters={}, schools_moscow=schools_moscow, schools_spb=schools_spb, rows=rows, cols=cols)
 

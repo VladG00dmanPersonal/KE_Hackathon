@@ -63,8 +63,6 @@ def example():
                 grade_filter = df['Класс'].astype(int) <= 8
             
             df = df[grade_filter]
-            rows = df.values.tolist()
-            cols = df.columns.to_list()
 
             print(tour, grade, region)
             print(df)

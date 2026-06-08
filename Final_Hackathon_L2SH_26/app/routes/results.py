@@ -29,12 +29,14 @@ def example():
     df = pd.DataFrame(data).sort_values("Итог", ascending=False).reset_index(drop=True)
     df['Школа'] = df['Участник'].apply(lambda x: get_school(x)[0])
     df["Место"] = df.index + 1
+    rows = []
+    cols = []
+
 
     if request.method == "POST":
         tour = request.form.get("option_value2", "basic")
         grade = request.form.get("option_value", "basic")
         region = request.form.get("option_value3", "basic")
-
         print(tour)
 
         if tour == 'both':
@@ -61,6 +63,8 @@ def example():
                 grade_filter = df['Класс'].astype(int) <= 8
             
             df = df[grade_filter]
+            rows = df.values.tolist()
+            cols = df.columns.to_list()
 
             print(tour, grade, region)
             print(df)

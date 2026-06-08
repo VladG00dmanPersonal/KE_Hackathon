@@ -2,9 +2,11 @@ import os
 import json
 
 from flask import Blueprint, current_app, flash, g, redirect, render_template, request, url_for
-
+import pandas as pd
 from app.db import get_db
 from app.utils import ALLOWED_FILE_EXTENSIONS, ALLOWED_IMAGE_EXTENSIONS, allowed_file, login_required, unique_filename
+from app.static.task2.func import get_school
+import numpy as np
 
 
 bp = Blueprint("results", __name__, url_prefix="/results")
@@ -22,24 +24,48 @@ def save_upload(file_storage, subdir, extensions):
 
 
 @bp.route("/example", methods=("GET", "POST"))
-# @login_required
 def example():
+    data = json.load(open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/parsed_results.json", "r", encoding="utf-8"))["Второй тур"]["300"]
+    df = pd.DataFrame(data).sort_values("Итог", ascending=False).reset_index(drop=True)
+    df['Школа'] = df['Участник'].apply(lambda x: get_school(x)[0])
+    df["Место"] = df.index + 1
+
     if request.method == "POST":
         tour = request.form.get("option_value2", "basic")
         grade = request.form.get("option_value", "basic")
         region = request.form.get("option_value3", "basic")
-        print(tour, grade, region)
+
+        print(tour)
+
+        if tour == 'both':
+            data = json.load(open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/parsed_results.json", "r", encoding="utf-8"))["Второй тур"]["300"]
+            df = pd.DataFrame(data).sort_values("Итог", ascending=False).reset_index(drop=True)
+            df['Школа'] = df['Участник'].apply(lambda x: get_school(x)[0])
+            df["Место"] = df.index + 1
+
+            grade_filter = df['Класс'].astype(int) > 0
+
+            if grade == "all":
+                pass
+            elif grade == "only_11":
+                grade_filter = df['Класс'].astype(int) == 11
+            elif grade == "only_10":
+                grade_filter = df['Класс'].astype(int) == 10
+            elif grade == "only_9":
+                grade_filter = df['Класс'].astype(int) == 9
+            elif grade == "10_and_lower":
+                grade_filter = df['Класс'].astype(int) <= 10
+            elif grade == "9_and_lower":
+                grade_filter = df['Класс'].astype(int) <= 9
+            elif grade == "8_and_lower":
+                grade_filter = df['Класс'].astype(int) <= 8
+            
+            df = df[grade_filter]
+
+            print(tour, grade, region)
+            print(df)
 
     countries = [{id: 1, "name": "Москва"}, {id: 2, "name": "Санкт-Петербург"}, {id: 3, "name": "Республика Татарстан"}, {id: 4, "name": "Московская область"}, {id: 4, "name": "Новосибирская область"}, {id: 5, "name": "Челябинская область"}, {id: 6, "name": "Свердловская область"}, {id: 7, "name": "Пермский край"}, {id: 8, "name": "Новосибирская область"}, {id: 9, "name": "Липецкая область"}, {id: 10, "name": "Оренбургская область"}, {id: 11, "name": "Республика Башкортостан"}]
 
-    submissions = get_db().execute(
-        """
-        SELECT fs.*, u.email AS user_email
-        FROM form_submissions fs
-        LEFT JOIN users u ON u.id = fs.user_id
-        ORDER BY fs.created_at DESC
-        LIMIT 10
-        """
-    ).fetchall()
-    return render_template("results/example.html", submissions=submissions, tags=countries, filters={})
+    return render_template("results/example.html", tags=countries, filters={})
 

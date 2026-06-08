@@ -27,39 +27,13 @@
             <label class="check-line"><input type="radio" name="option_value" value="8_and_lower"> 8 класс и младше</label>
         </fieldset>
 
-        <select class="filter-tag" name="tag_id">
-            <option value="">Регион</option>
+        <fieldset class="choice-fieldset">
+            <legend> Регион </legend>
             {% for tag in tags %}
-                <option value="{{ tag.id }}" {% if filters.tag_id == tag.id %}selected{% endif %}>{{ tag.name }}</option>
+                <label class="check-line"><input type="radio" name="option_value3" value="{{ tag.name }}" checked>{{ tag.name }}</label>
             {% endfor %}
-        </select>
-
+        </fieldset>
         <button type="submit">Просмотреть результат</button>
     </form>
-</section>
-
-<section class="section">
-    <h2>Последние отправки</h2>
-    <div class="stack">
-        {% for item in submissions %}
-            <article class="list-row">
-                <div>
-                    <strong>{{ item.title }}</strong>
-                    <p class="muted">{{ item.created_at }} · число {{ item.number_value }} · ползунок {{ item.slider_value }}</p>
-                    <p>{{ item.notes }}</p>
-                </div>
-                <div class="row-actions">
-                    {% if item.image_path %}
-                        <button class="button secondary" type="button" data-preview-src="{{ url_for('static', filename=item.image_path) }}" data-preview-title="{{ item.title }}">Картинка</button>
-                    {% endif %}
-                    {% if item.file_path %}
-                        <a class="button secondary" href="{{ url_for('static', filename=item.file_path) }}" target="_blank">Файл</a>
-                    {% endif %}
-                </div>
-            </article>
-        {% else %}
-            <p class="empty">Форма ещё не отправлялась.</p>
-        {% endfor %}
-    </div>
 </section>
 {% endblock %}

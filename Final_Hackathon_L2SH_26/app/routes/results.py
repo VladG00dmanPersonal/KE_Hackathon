@@ -27,8 +27,7 @@ def example():
     if request.method == "POST":
         tour = request.form.get("option_value2", "basic")
         grade = request.form.get("option_value", "basic")
-        region = request.form.get("tag_id")
-
+        region = request.form.get("option_value3", "basic")
         print(tour, grade, region)
 
     countries = [{id: 1, "name": "Москва"}, {id: 2, "name": "Санкт-Петербург"}, {id: 3, "name": "Республика Татарстан"}, {id: 4, "name": "Московская область"}, {id: 4, "name": "Новосибирская область"}, {id: 5, "name": "Челябинская область"}, {id: 6, "name": "Свердловская область"}, {id: 7, "name": "Пермский край"}, {id: 8, "name": "Новосибирская область"}, {id: 9, "name": "Липецкая область"}, {id: 10, "name": "Оренбургская область"}, {id: 11, "name": "Республика Башкортостан"}]

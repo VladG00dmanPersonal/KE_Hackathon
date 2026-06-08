@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- УСЛОВИЕ -->
+    {% if is_logged_in %}
+        <p style="color: green;">Добро пожаловать в систему!</p>
+    {% else %}
+        <p style="color: red;">Пожалуйста, войдите в аккаунт.</p>
+    {% endif %}
+
+    <!-- ЦИКЛ -->
+    <ul>
+    {% for item in items %}
+        <!-- loop.index - встроенная переменная Jinja2 (начинается с 1) -->
+        <li>{{ loop.index }}. {{ item }}</li>
+    {% else %}
+        <!-- Выполнится, если список items пустой -->
+        <li>Список пуст</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой шаблон</title>
+</head>
+<body>
+    <h1>Привет из шаблона!</h1>
+
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Статика</title>
+        <!-- Подключение CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <h1>Проверка статики</h1>
+        
+        <!-- Подключение изображения -->
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Логотип" width="200">
+        
+        <!-- Ссылка на скачивание файла -->
+        <a href="{{ url_for('static', filename='docs/manual.pdf') }}" download>Скачать инструкцию</a>
+    </body>
+    </html>
+</body>
+</html>

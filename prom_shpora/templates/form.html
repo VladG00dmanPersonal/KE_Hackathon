@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Регистрация</h2>
+    <!-- action="" означает отправку на текущий URL, method="POST" скрывает данные из адресной строки -->
+    <form action="" method="POST">
+        <label>Имя:</label>
+        <input type="text" name="username" required>
+        <br><br>
+        <label>Email:</label>
+        <input type="email" name="email" required>
+        <br><br>
+        <button type="submit">Отправить</button>
+    </form>
+
+    <!-- Вывод сообщения после отправки -->
+    {% if message %}
+        <p style="color: green;"><strong>{{ message }}</strong></p>
+    {% endif %}
+</body>
+</html>

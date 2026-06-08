@@ -74,7 +74,7 @@ def example():
     file = open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/schools_spb.txt", "r", encoding="utf-8")
     schools_spb = [{id: i, "name": line.strip()} for i, line in enumerate(file.readlines(), start=1)]
     file.close()
-    print(schools_moscow)
+    print(countries)
     print(schools_spb)
     return render_template("results/example.html", tags=countries, filters={}, schools_moscow=schools_moscow, schools_spb=schools_spb)
 

@@ -8,7 +8,7 @@ def get_school(FULL_NAME):
     reader_moscow = csv.DictReader(moscow_file, delimiter=';')
 
     surname, name, lastname = FULL_NAME.split()
-    # print(name, surname, lastname)
+    print(name, surname, lastname)
     for i in reader_spb:
         name_spb = i['Участник'].split('(')
         NAME_SPB = name_spb[0][:-1]
@@ -17,7 +17,6 @@ def get_school(FULL_NAME):
         if NAME_SPB == surname + ' ' + name + ' ' + lastname:
             return (school_spb, 'Санкт-Петербург')
     for i in reader_moscow:
-        # print(surname + ' ' + name)
-        if i['Участник'] == surname + ' ' + name:
+        if surname + ' ' + name in i['Участник']:
             return (i['Школа'], 'Москва')
     return (None, None)

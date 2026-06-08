@@ -37,13 +37,10 @@ def example():
         tour = request.form.get("option_value2", "basic")
         grade = request.form.get("option_value", "basic")
         region = request.form.get("option_value3", "basic")
-        print(tour)
 
         if tour == 'first':
             data = json.load(open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/parsed_results.json", "r", encoding="utf-8"))["Второй тур"]["300"]
             df = pd.DataFrame(data).sort_values("Итог", ascending=False).reset_index(drop=True)
-            df['Итог'] = df['Задача 1'] + df['Задача 2'] + df['Задача 3'] + df['Задача 4']
-            # df = df.sort_values("Итог", ascending=False).reset_index(drop=True)
             df['Школа'] = df['Участник'].apply(lambda x: get_school(x)[0])
             df["Место"] = df.index + 1
 
@@ -66,6 +63,19 @@ def example():
                 grade_filter = df['Класс'].astype(int) <= 8
             
             df = df[grade_filter][region_filter]
+            # print(df.isna().sum())
+            df['Задача 1'] = df['Задача 1'].str.replace('.', '0')
+            df['Задача 2'] = df['Задача 2'].str.replace('.', '0')
+            df['Задача 3'] = df['Задача 3'].str.replace('.', '0')
+            df['Задача 4'] = df['Задача 4'].str.replace('.', '0')
+
+
+            df['Итог'] = df['Задача 1'].astype(int, errors="ignore") + df['Задача 2'].astype(int, errors="ignore") + df['Задача 3'].astype(int, errors="ignore") + df['Задача 4'].astype(int, errors="ignore")
+            df = df.sort_values("Итог", ascending=False).reset_index(drop=True)
+            df["Место"] = df.index + 1
+
+            if region not in ["Москва", "Санкт-Петербург"]:
+                df = df.drop(['Школа'], axis=1)
 
             cols = df.columns.to_list()
             rows = df.values.tolist()
@@ -96,6 +106,8 @@ def example():
                 grade_filter = df['Класс'].astype(int) <= 8
             
             df = df[grade_filter][region_filter]
+            if region not in ["Москва", "Санкт-Петербург"]:
+                df = df.drop(['Школа'], axis=1)
 
             cols = df.columns.to_list()
             rows = df.values.tolist()

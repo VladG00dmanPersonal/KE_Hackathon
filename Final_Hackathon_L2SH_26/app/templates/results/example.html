@@ -34,8 +34,9 @@
 
         <fieldset class="choice-fieldset">
             <legend> Регион </legend>
-            {% for tag in tags %}
-                <label class="check-line"><input type="radio" name="option_value3" value="{{ tag.name }}" checked>{{ tag.name }}</label>
+            <label class="check-line"><input type="radio" name="option_value3" value="Москва" checked>Москва</label>
+            {% for tag in tags[1:] %}
+                <label class="check-line"><input type="radio" name="option_value3" value="{{ tag.name }}">{{ tag.name }}</label>
             {% endfor %}
         </fieldset>
         <button type="submit">Просмотреть результат</button>

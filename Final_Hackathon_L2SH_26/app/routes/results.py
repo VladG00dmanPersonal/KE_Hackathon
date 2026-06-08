@@ -66,6 +66,13 @@ def example():
             print(df)
 
     countries = [{id: 1, "name": "Москва"}, {id: 2, "name": "Санкт-Петербург"}, {id: 3, "name": "Республика Татарстан"}, {id: 4, "name": "Московская область"}, {id: 4, "name": "Новосибирская область"}, {id: 5, "name": "Челябинская область"}, {id: 6, "name": "Свердловская область"}, {id: 7, "name": "Пермский край"}, {id: 8, "name": "Новосибирская область"}, {id: 9, "name": "Липецкая область"}, {id: 10, "name": "Оренбургская область"}, {id: 11, "name": "Республика Башкортостан"}]
-
-    return render_template("results/example.html", tags=countries, filters={})
+    file = open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/schools_moscow.txt", "r", encoding="utf-8")
+    schools_moscow = [{id: i, "name": line.strip()} for i, line in enumerate(file.readlines(), start=1)]
+    file.close()
+    file = open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/schools_spb.txt", "r", encoding="utf-8")
+    schools_spb = [{id: i, "name": line.strip()} for i, line in enumerate(file.readlines(), start=1)]
+    file.close()
+    print(schools_moscow)
+    print(schools_spb)
+    return render_template("results/example.html", tags=countries, filters={}, schools_moscow=schools_moscow, schools_spb=schools_spb)
 

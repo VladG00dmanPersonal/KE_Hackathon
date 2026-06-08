@@ -47,11 +47,3 @@ for i in schools_spb:
     w_new.write(i + "\n")
 w_new.close()
 
-if region == "Москва":
-        file = open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/schools_moscow.txt", "r", encoding="utf-8")
-        schools = [line.strip() for line in file.readlines()]
-        file.close()
-    if region == "Санкт-Петербург":
-        file = open("/workspaces/KE_Hackathon/Final_Hackathon_L2SH_26/app/static/task1_parse/schools_spb.txt", "r", encoding="utf-8")
-        schools = [line.strip() for line in file.readlines()]
-        file.close()
